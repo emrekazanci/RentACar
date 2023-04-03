@@ -5,6 +5,8 @@ import com.emre.entity.Car;
 import com.emre.entity.join.CarColorBrand;
 import com.emre.entity.join.CarCustomerRent;
 import com.emre.entity.join.CarDailyPrice;
+import com.emre.exception.ErrorType;
+import com.emre.exception.RentACarException;
 import com.emre.mapper.ICarMapper;
 import com.emre.repository.ICarRepository;
 import com.emre.service.join.CarColorBrandService;
@@ -33,6 +35,13 @@ public class CarService extends ServiceManager<Car, Long> {
 
     public Car save(SaveCarRequestDto dto) {
         return save(ICarMapper.INSTANCE.toCar(dto));
+    }
+
+    public List<Car> findAll() {
+        List<Car> cars = carRepository.findAll();
+        if (cars.isEmpty())
+            throw new RentACarException(ErrorType.CAR_NOT_FOUND);
+        return cars;
     }
 
     public List<Car> findAllByCarNameStartingWithIgnoreCase(String name) {

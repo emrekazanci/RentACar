@@ -2,6 +2,8 @@ package com.emre.service;
 
 import com.emre.dto.request.SaveBrandRequestDto;
 import com.emre.entity.Brand;
+import com.emre.exception.ErrorType;
+import com.emre.exception.RentACarException;
 import com.emre.mapper.IBrandMapper;
 import com.emre.repository.IBrandRepository;
 import com.emre.utility.ServiceManager;
@@ -24,7 +26,10 @@ public class BrandService extends ServiceManager<Brand, Long> {
     }
 
     public List<Brand> findAll() {
-        return brandRepository.findAll();
+        List<Brand> brands = brandRepository.findAll();
+        if (brands.isEmpty())
+            throw new RentACarException(ErrorType.BRAND_NOT_FOUND);
+        return brands;
     }
 
     public Optional<Brand> findById(Long id) {
